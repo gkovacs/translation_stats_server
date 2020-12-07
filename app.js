@@ -66,20 +66,20 @@ async function listTableNames(dataset_name) { // 'liltstat_ungi'
   return output;
 }
 
-let cached_table_set;
+let cached_table_sets = {};
 
 async function ensureTableExists(dataset_name, table_name) {
-  if (cached_table_set === undefined) {
+  if (cached_table_sets[dataset_name] === undefined) {
     const cached_table_list = await listTableNames(dataset_name);
-    cached_table_set = new Set();
+    cached_table_sets[dataset_name] = new Set();
     for (let x of cached_table_list) {
-      cached_table_set.add(x);
+      cached_table_sets[dataset_name].add(x);
     }
   }
-  if (cached_table_set.has(table_name)) {
+  if (cached_table_sets[dataset_name].has(table_name)) {
     return;
   }
-  cached_table_set.add(table_name);
+  cached_table_sets[dataset_name].add(table_name);
   await bigquery.dataset(dataset_name).createTable(table_name, {schema: schema});
 }
 
