@@ -1,0 +1,3 @@
+node_modules
+.getsecret.yaml
+gcloudServiceKey-development.json
